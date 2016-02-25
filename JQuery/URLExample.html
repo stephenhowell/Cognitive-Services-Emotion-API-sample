@@ -1,0 +1,34 @@
+<html>
+
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <p>This example shows how to post a image to the Project Oxford Emotion API by passing a url to an image</p>
+    <br>
+    <button id="btn">Click here</button>
+    
+    <script type="text/javascript">
+        $('#btn').click(function () {
+            $.ajax({
+                url: "https://api.projectoxford.ai/emotion/v1.0/recognize",
+                beforeSend: function (xhrObj) {
+                    xhrObj.setRequestHeader("Content-Type", "application/json");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "1dd1f4e23a5743139399788aa30a7153");
+                },
+                type: "POST",
+                data: '{"url": "https://philosophybank.files.wordpress.com/2013/08/happy-people.jpg"}',
+            })
+                .done(function (data) {
+                    JSON.stringify(data);
+                    alert(JSON.stringify(data));
+                })
+                .fail(function (error) {
+                    alert(error.getAllResponseHeaders());
+                });
+        });
+    </script>
+</body>
+
+</html>
