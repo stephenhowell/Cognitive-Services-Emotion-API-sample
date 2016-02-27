@@ -18,7 +18,7 @@ namespace EmotionAPI.Controllers
         public const string _apiKey = "1dd1f4e23a5743139399788aa30a7153";
 
         //_apiUrl: The base URL for the API. Find out what this is for other APIs via the API documentation
-        public const string _baseApiUrl = "https://api.projectoxford.ai/";
+        public const string _apiUrl = "https://api.projectoxford.ai/emotion/v1.0/recognize";
 
         public IActionResult Index()
         {
@@ -30,20 +30,23 @@ namespace EmotionAPI.Controllers
             using (var httpClient = new HttpClient())
             {
                 //setup HttpClient
-                httpClient.BaseAddress = new Uri(_baseApiUrl);
+                httpClient.BaseAddress = new Uri(_apiUrl);
                 httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _apiKey);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 //setup data
-                var dataO = new URLData()
-                {
-                    url = "https://oxfordportal.blob.core.windows.net/emotion/recognition1.jpg"
-                };
-                var serialisedData = new StringContent(dataO.ToString());
-                serialisedData.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                //var dataO = new URLData()
+                //{
+                //    url = "https://oxfordportal.blob.core.windows.net/emotion/recognition1.jpg"
+                //};
+                //var serialisedData = new StringContent(dataO.ToString());
+                //serialisedData.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+
+                HttpContent content = new StringContent(@"{ ""url"": ""https://oxfordportal.blob.core.windows.net/emotion/recognition1.jpg""}");
+                content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
 
                 //make request
-                var response = await httpClient.PostAsync(_baseApiUrl, serialisedData);
+                var response = await httpClient.PostAsync(_apiUrl, content);
 
                 //read response
                 var responseContent = await response.Content.ReadAsStringAsync();
