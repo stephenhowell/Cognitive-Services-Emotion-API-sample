@@ -9,6 +9,8 @@ using EmotionAPI.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using Microsoft.AspNet.Http;
+using System.IO;
 
 namespace EmotionAPI.Controllers
 {
@@ -25,6 +27,23 @@ namespace EmotionAPI.Controllers
             return View();
         }
 
+        // GET: Home/FileExample
+        public IActionResult FileExample()
+        {
+            return View();
+        }
+
+        // POST: Home/FileExample
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> FileExample(IFormFile files)
+        {
+            //http://stackoverflow.com/questions/29836342/mvc-6-httppostedfilebase
+
+
+            return View();
+        }
+
         public async Task<IActionResult> URLExample()
         {
             using (var httpClient = new HttpClient())
@@ -34,25 +53,23 @@ namespace EmotionAPI.Controllers
                 httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _apiKey);
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //setup data
-                //var dataO = new URLData()
-                //{
-                //    url = "https://oxfordportal.blob.core.windows.net/emotion/recognition1.jpg"
-                //};
-                //var serialisedData = new StringContent(dataO.ToString());
-                //serialisedData.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+                //setup data object
+                var dataObject = new URLData()
+                {
+                    url = "https://oxfordportal.blob.core.windows.net/emotion/recognition1.jpg"
+                };
 
-                HttpContent content = new StringContent(@"{ ""url"": ""https://oxfordportal.blob.core.windows.net/emotion/recognition1.jpg""}");
+                //setup httpContent object
+                var dataJson = JsonConvert.SerializeObject(dataObject);
+                HttpContent content = new StringContent(dataJson);
                 content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
 
                 //make request
                 var response = await httpClient.PostAsync(_apiUrl, content);
 
-                //read response
+                //read response and write to view
                 var responseContent = await response.Content.ReadAsStringAsync();
-
-                //parse response and write to view
-                dynamic d = JObject.Parse(responseContent);
+                ViewData["Result"] = responseContent;
             }
 
             return View();
