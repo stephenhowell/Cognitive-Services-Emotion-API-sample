@@ -36,10 +36,27 @@ namespace EmotionAPI.Controllers
         // POST: Home/FileExample
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> FileExample(IFormFile files)
+        public async Task<IActionResult> FileExample(IFormFile file)
         {
             //http://stackoverflow.com/questions/29836342/mvc-6-httppostedfilebase
+            using (var httpClient = new HttpClient())
+            {
+                //setup HttpClient
+                httpClient.BaseAddress = new Uri(_apiUrl);
+                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _apiKey);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
 
+                //setup data object
+                HttpContent content = new StreamContent(file.OpenReadStream());
+                content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/octet-stream");
+
+                //make request
+                var response = await httpClient.PostAsync(_apiUrl, content);
+
+                //read response and write to view
+                var responseContent = await response.Content.ReadAsStringAsync();
+                ViewData["Result"] = responseContent;
+            }
 
             return View();
         }
