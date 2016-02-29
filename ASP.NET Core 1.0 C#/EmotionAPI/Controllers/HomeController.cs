@@ -38,7 +38,6 @@ namespace EmotionAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> FileExample(IFormFile file)
         {
-            //http://stackoverflow.com/questions/29836342/mvc-6-httppostedfilebase
             using (var httpClient = new HttpClient())
             {
                 //setup HttpClient
@@ -88,20 +87,6 @@ namespace EmotionAPI.Controllers
                 var responseContent = await response.Content.ReadAsStringAsync();
                 ViewData["Result"] = responseContent;
             }
-
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
 
             return View();
         }
