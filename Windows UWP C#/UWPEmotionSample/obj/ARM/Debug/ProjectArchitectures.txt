@@ -1,0 +1,1 @@
+C:\Users\marti\Documents\GitHub\Cognitive-Services-Emotion-API-sample\Windows UWP C#\UWPEmotionSample\UWPEmotionSample.csproj;arm
